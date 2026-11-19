@@ -9,7 +9,7 @@ This document tracks the phased execution plan and checklist for building the en
 * [x] **Phase 2: DROSAT Dataset Generation (1,000 Items PDF)** (Completed)
 * [x] **Phase 3: Parsing, Chunking & Vector Ingestion (Qdrant)** (Completed)
 * [x] **Phase 4: Core RAG Retrieval & Conversational Pipeline (MongoDB & LLM)** (Completed)
-* [ ] **Phase 5: FastAPI Backend REST Endpoints**
+* [x] **Phase 5: FastAPI Backend REST Endpoints** (Completed)
 * [ ] **Phase 6: Interactive Web Dashboard (Vanilla HTML/CSS/JS)**
 * [ ] **Phase 7: Testing, Postman Collection & Deliverables**
 
@@ -50,11 +50,11 @@ This document tracks the phased execution plan and checklist for building the en
 - [x] **4.5** Create a CLI test script (`scripts/test_rag.py`) to test end-to-end chat queries and sector isolation.
 
 ### Phase 5: FastAPI Backend REST Endpoints
-- [ ] **5.1** Set up FastAPI application (`app/main.py`) with CORS middleware and structured routers.
-- [ ] **5.2** Define Pydantic request and response models (`app/schemas.py`).
-- [ ] **5.3** Implement `POST /api/upload-pdf/`: Uploads, parses, vectorizes, and indexes new PDFs into Qdrant.
-- [ ] **5.4** Implement `POST /api/chat/`: Accepts `{ query, sector, session_id }`, executes RAG, logs to MongoDB, and returns answer with attribution sources.
-- [ ] **5.5** Verify Swagger documentation at `/docs`.
+- [x] **5.1** Set up FastAPI application (`app/main.py`) with CORS middleware and structured routers.
+- [x] **5.2** Define Pydantic request and response models (`app/schemas.py`).
+- [x] **5.3** Implement `POST /api/upload-pdf/`: Uploads, parses, vectorizes, and indexes new PDFs into Qdrant.
+- [x] **5.4** Implement `POST /api/chat/`: Accepts `{ query, sector, session_id }`, executes RAG, logs to MongoDB, and returns answer with attribution sources.
+- [x] **5.5** Verify Swagger documentation at `/docs`.
 
 ### Phase 6: Interactive Web Dashboard (Vanilla HTML/CSS/JS)
 - [ ] **6.1** Create static directory and serve `GET /` via FastAPI `StaticFiles`.
