@@ -1,0 +1,25 @@
+# Environment & Secrets (NEVER COMMIT)
+.env
+.env.*
+!.env.example
+
+# Python Virtual Environment
+venv/
+ENV/
+env/
+
+# Python Cache & Artifacts
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Large Data files & PDFs
+data/*.pdf
+uploads/
+
+# OS & Editor
+.DS_Store
+.vscode/
+.idea/
