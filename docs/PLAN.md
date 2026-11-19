@@ -5,7 +5,7 @@ This document tracks the phased execution plan and checklist for building the en
 ---
 
 ## Progress Overview
-* [ ] **Phase 1: Infrastructure & Cloud Services Setup** (In Progress)
+* [x] **Phase 1: Infrastructure & Cloud Services Setup** (Completed)
 * [ ] **Phase 2: DROSAT Dataset Generation (1,000 Items PDF)**
 * [ ] **Phase 3: Parsing, Chunking & Vector Ingestion (Qdrant)**
 * [ ] **Phase 4: Core RAG Retrieval & Conversational Pipeline (MongoDB & LLM)**
@@ -18,13 +18,13 @@ This document tracks the phased execution plan and checklist for building the en
 ## Detailed Phases & Sub-tasks
 
 ### Phase 1: Infrastructure & Cloud Services Setup
-- [ ] **1.1** Initialize Python Virtual Environment (`venv`) in project root.
-- [ ] **1.2** Create `requirements.txt` with all required dependencies (`fastapi`, `uvicorn`, `qdrant-client`, `pymongo`, `sentence-transformers`, `google-generativeai`, `pypdf`, `reportlab`, `python-dotenv`).
-- [ ] **1.3** Set up free **Qdrant Cloud** cluster and obtain `QDRANT_URL` and `QDRANT_API_KEY`.
-- [ ] **1.4** Set up free **MongoDB Atlas** M0 cluster and obtain `MONGODB_URI`.
-- [ ] **1.5** Set up **Google Gemini API** key (`GEMINI_API_KEY`).
-- [ ] **1.6** Configure environment variables in `.env` and `.env.example`.
-- [ ] **1.7** Create a verification connectivity script (`scripts/test_connections.py`) to validate access to Qdrant, MongoDB, and Gemini before writing application code.
+- [x] **1.1** Initialize Python Virtual Environment (`venv`) in project root.
+- [x] **1.2** Create `requirements.txt` with all required dependencies (`fastapi`, `uvicorn`, `qdrant-client`, `pymongo`, `sentence-transformers`, `google-generativeai`, `pypdf`, `reportlab`, `python-dotenv`).
+- [x] **1.3** Set up free **Qdrant Cloud** cluster and obtain `QDRANT_URL` and `QDRANT_API_KEY`.
+- [x] **1.4** Set up free **MongoDB Atlas** M0 cluster and obtain `MONGODB_URI`.
+- [x] **1.5** Set up **Google Gemini API** key (`GEMINI_API_KEY`).
+- [x] **1.6** Configure environment variables in `.env` and `.env.example`.
+- [x] **1.7** Create a verification connectivity script (`scripts/test_connections.py`) to validate access to Qdrant, MongoDB, and Gemini before writing application code.
 
 ### Phase 2: DROSAT Dataset Generation (1,000 Items PDF)
 - [ ] **2.1** Create dataset generation script (`scripts/generate_drosat_dataset.py`) using `reportlab`.
