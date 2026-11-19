@@ -7,7 +7,7 @@ This document tracks the phased execution plan and checklist for building the en
 ## Progress Overview
 * [x] **Phase 1: Infrastructure & Cloud Services Setup** (Completed)
 * [x] **Phase 2: DROSAT Dataset Generation (1,000 Items PDF)** (Completed)
-* [ ] **Phase 3: Parsing, Chunking & Vector Ingestion (Qdrant)**
+* [x] **Phase 3: Parsing, Chunking & Vector Ingestion (Qdrant)** (Completed)
 * [ ] **Phase 4: Core RAG Retrieval & Conversational Pipeline (MongoDB & LLM)**
 * [ ] **Phase 5: FastAPI Backend REST Endpoints**
 * [ ] **Phase 6: Interactive Web Dashboard (Vanilla HTML/CSS/JS)**
@@ -36,11 +36,11 @@ This document tracks the phased execution plan and checklist for building the en
 - [x] **2.4** Validate PDF structure, page numbers, and item count.
 
 ### Phase 3: Parsing, Chunking & Vector Ingestion (Qdrant)
-- [ ] **3.1** Build PDF parsing module (`app/services/pdf_parser.py`) to extract text and track page indices.
-- [ ] **3.2** Implement structured chunking preserving metadata: `sector`, `item_id`, `source_file`, and `content`.
-- [ ] **3.3** Initialize Hugging Face `sentence-transformers/all-MiniLM-L6-v2` locally for 384-dimensional dense vectors.
-- [ ] **3.4** Initialize Qdrant collection `drosat_knowledge_base` with Cosine distance and create payload indexes for `sector`.
-- [ ] **3.5** Build batch upsert ingestion script (`app/services/vector_store.py`) to index all 1,000 items into Qdrant.
+- [x] **3.1** Build PDF parsing module (`app/services/pdf_parser.py`) to extract text and track page indices.
+- [x] **3.2** Implement structured chunking preserving metadata: `sector`, `item_id`, `source_file`, and `content`.
+- [x] **3.3** Initialize Hugging Face `sentence-transformers/all-MiniLM-L6-v2` locally for 384-dimensional dense vectors.
+- [x] **3.4** Initialize Qdrant collection `drosat_knowledge_base` with Cosine distance and create payload indexes for `sector`.
+- [x] **3.5** Build batch upsert ingestion script (`app/services/vector_store.py`) to index all 1,000 items into Qdrant.
 
 ### Phase 4: Core RAG Retrieval & Conversational Pipeline (MongoDB & LLM)
 - [ ] **4.1** Implement vector search query function with dynamic sector filtering (`filter={"sector": sector}`).
