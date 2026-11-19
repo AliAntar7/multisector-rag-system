@@ -6,7 +6,7 @@ This document tracks the phased execution plan and checklist for building the en
 
 ## Progress Overview
 * [x] **Phase 1: Infrastructure & Cloud Services Setup** (Completed)
-* [ ] **Phase 2: DROSAT Dataset Generation (1,000 Items PDF)**
+* [x] **Phase 2: DROSAT Dataset Generation (1,000 Items PDF)** (Completed)
 * [ ] **Phase 3: Parsing, Chunking & Vector Ingestion (Qdrant)**
 * [ ] **Phase 4: Core RAG Retrieval & Conversational Pipeline (MongoDB & LLM)**
 * [ ] **Phase 5: FastAPI Backend REST Endpoints**
@@ -27,13 +27,13 @@ This document tracks the phased execution plan and checklist for building the en
 - [x] **1.7** Create a verification connectivity script (`scripts/test_connections.py`) to validate access to Qdrant, MongoDB, and Gemini before writing application code.
 
 ### Phase 2: DROSAT Dataset Generation (1,000 Items PDF)
-- [ ] **2.1** Create dataset generation script (`scripts/generate_drosat_dataset.py`) using `reportlab`.
-- [ ] **2.2** Structure 1,000 distinct items distributed across 3 DROSAT sectors:
+- [x] **2.1** Create dataset generation script (`scripts/generate_drosat_dataset.py`) using `reportlab`.
+- [x] **2.2** Structure 1,000 distinct items distributed across 3 DROSAT sectors:
   - `courses_curriculum` (~400 items: Course ID, Subject, Grade Level, Teacher, Syllabus, Price)
   - `teachers_centers` (~300 items: Teacher ID, Name, Center Name, Location/Zone, Weekly Schedule, Contact)
   - `policies_support` (~300 items: Policy/FAQ ID, Topic, Rules, Payment/Kashier guides, Delivery terms)
-- [ ] **2.3** Compile and export the multi-page styled PDF to `data/drosat_knowledge_base.pdf`.
-- [ ] **2.4** Validate PDF structure, page numbers, and item count.
+- [x] **2.3** Compile and export the multi-page styled PDF to `data/drosat_knowledge_base.pdf`.
+- [x] **2.4** Validate PDF structure, page numbers, and item count.
 
 ### Phase 3: Parsing, Chunking & Vector Ingestion (Qdrant)
 - [ ] **3.1** Build PDF parsing module (`app/services/pdf_parser.py`) to extract text and track page indices.
