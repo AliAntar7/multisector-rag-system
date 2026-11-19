@@ -8,7 +8,7 @@ This document tracks the phased execution plan and checklist for building the en
 * [x] **Phase 1: Infrastructure & Cloud Services Setup** (Completed)
 * [x] **Phase 2: DROSAT Dataset Generation (1,000 Items PDF)** (Completed)
 * [x] **Phase 3: Parsing, Chunking & Vector Ingestion (Qdrant)** (Completed)
-* [ ] **Phase 4: Core RAG Retrieval & Conversational Pipeline (MongoDB & LLM)**
+* [x] **Phase 4: Core RAG Retrieval & Conversational Pipeline (MongoDB & LLM)** (Completed)
 * [ ] **Phase 5: FastAPI Backend REST Endpoints**
 * [ ] **Phase 6: Interactive Web Dashboard (Vanilla HTML/CSS/JS)**
 * [ ] **Phase 7: Testing, Postman Collection & Deliverables**
@@ -43,11 +43,11 @@ This document tracks the phased execution plan and checklist for building the en
 - [x] **3.5** Build batch upsert ingestion script (`app/services/vector_store.py`) to index all 1,000 items into Qdrant.
 
 ### Phase 4: Core RAG Retrieval & Conversational Pipeline (MongoDB & LLM)
-- [ ] **4.1** Implement vector search query function with dynamic sector filtering (`filter={"sector": sector}`).
-- [ ] **4.2** Build strict RAG prompt template enforcing grounded answers and mandatory source citations (`[Source: DROSAT Catalog, Page X, Item ID]`).
-- [ ] **4.3** Connect Google Gemini Flash LLM to synthesize answers based on retrieved context.
-- [ ] **4.4** Implement MongoDB chat history service (`app/services/chat_history.py`) to persist `session_id`, queries, responses, sources, and timestamps.
-- [ ] **4.5** Create a CLI test script (`scripts/test_rag.py`) to test end-to-end chat queries and sector isolation.
+- [x] **4.1** Implement vector search query function with dynamic sector filtering (`filter={"sector": sector}`).
+- [x] **4.2** Build strict RAG prompt template enforcing grounded answers and mandatory source citations (`[Source: DROSAT Catalog, Page X, Item ID]`).
+- [x] **4.3** Connect Google Gemini Flash LLM to synthesize answers based on retrieved context.
+- [x] **4.4** Implement MongoDB chat history service (`app/services/chat_history.py`) to persist `session_id`, queries, responses, sources, and timestamps.
+- [x] **4.5** Create a CLI test script (`scripts/test_rag.py`) to test end-to-end chat queries and sector isolation.
 
 ### Phase 5: FastAPI Backend REST Endpoints
 - [ ] **5.1** Set up FastAPI application (`app/main.py`) with CORS middleware and structured routers.
