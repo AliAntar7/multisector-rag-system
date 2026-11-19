@@ -1,0 +1,198 @@
+{
+  "info": {
+    "_postman_id": "7a94b593-9c54-47a8-9d41-e12345678901",
+    "name": "DROSAT Multisector RAG System API",
+    "description": "Postman Collection for testing the end-to-end Multisector RAG System with Qdrant, MongoDB Atlas, and Google Gemini.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8000",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Health & System",
+      "item": [
+        {
+          "name": "Check System Health",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/health",
+              "host": ["{{base_url}}"],
+              "path": ["api", "health"]
+            },
+            "description": "Verifies that the FastAPI server is running and configured with Qdrant and MongoDB Atlas."
+          }
+        },
+        {
+          "name": "Get Web Dashboard Interface",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/",
+              "host": ["{{base_url}}"],
+              "path": [""]
+            },
+            "description": "Serves the Vanilla HTML5/CSS3/JS single-page web dashboard."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Conversational RAG (Chat)",
+      "item": [
+        {
+          "name": "Chat - Courses & Curriculum",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"query\": \"محتاج تفاصيل كورس فيزياء تالتة ثانوي، سعره كام ومين المدرس والمحتوى؟\",\n  \"sector\": \"courses_curriculum\",\n  \"session_id\": \"postman_session_001\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/chat/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "chat", ""]
+            },
+            "description": "Tests RAG retrieval and generation filtered by the courses_curriculum sector."
+          }
+        },
+        {
+          "name": "Chat - Teachers & Centers",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"query\": \"عايز اعرف سنتر ومواعيد مستر محمد عبدالمعبود في مدينة نصر ورقم التواصل؟\",\n  \"sector\": \"teachers_centers\",\n  \"session_id\": \"postman_session_001\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/chat/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "chat", ""]
+            },
+            "description": "Tests RAG retrieval for tutor and center schedules with attribution citations."
+          }
+        },
+        {
+          "name": "Chat - Policies & Payment Support",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"query\": \"كود فوري بيفضل شغال قد إيه والشحن للمحافظات بياخد كام يوم؟\",\n  \"sector\": \"policies_support\",\n  \"session_id\": \"postman_session_001\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/chat/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "chat", ""]
+            },
+            "description": "Tests retrieval for platform policies, payment gates, and courier shipping."
+          }
+        },
+        {
+          "name": "Chat - General / All Sectors",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"query\": \"ما هي الخدمات والكورسات المتاحة على منصة دروسات؟\",\n  \"sector\": \"all\",\n  \"session_id\": \"postman_session_002\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/chat/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "chat", ""]
+            },
+            "description": "Tests cross-sector retrieval without sector constraint."
+          }
+        },
+        {
+          "name": "Chat - Out of Domain (Guardrail Check)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"query\": \"مين كسب كأس العالم 2022؟\",\n  \"sector\": \"courses_curriculum\",\n  \"session_id\": \"postman_session_003\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/chat/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "chat", ""]
+            },
+            "description": "Tests that the AI rejects out-of-domain queries without hallucinating."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Document Ingestion",
+      "item": [
+        {
+          "name": "Upload Custom Sector PDF",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "file",
+                  "type": "file",
+                  "src": "data/test_upload_doc.pdf",
+                  "description": "Attach any sector PDF file here"
+                },
+                {
+                  "key": "sector",
+                  "value": "courses_curriculum",
+                  "type": "text",
+                  "description": "Target sector for vector isolation"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/api/upload-pdf/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "upload-pdf", ""]
+            },
+            "description": "Uploads, parses page-by-page, generates dense embeddings, and indexes vectors into Qdrant Cloud."
+          }
+        }
+      ]
+    }
+  ]
+}
