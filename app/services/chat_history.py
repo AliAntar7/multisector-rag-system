@@ -56,3 +56,48 @@ class ChatHistoryService:
             "message_count": count,
             "last_interaction": last_msg["created_at"].isoformat() if last_msg else None
         }
+
+    def list_all_sessions(self, limit: int = 30) -> List[Dict[str, Any]]:
+        """Returns distinct sessions with their title (first query) and timestamp."""
+        pipeline = [
+            {"$sort": {"created_at": 1}},
+            {"$group": {
+                "_id": "$session_id",
+                "title": {"$first": "$user_query"},
+                "sector": {"$last": "$sector"},
+                "last_active": {"$last": "$created_at"},
+                "count": {"$sum": 1}
+            }},
+            {"$sort": {"last_active": -1}},
+            {"$limit": limit}
+        ]
+        results = list(self.collection.aggregate(pipeline))
+        sessions = []
+        for r in results:
+            sessions.append({
+                "session_id": r["_id"],
+                "title": (r.get("title") or "محادثة جديدة")[:45],
+                "sector": r.get("sector", "all"),
+                "last_active": r["last_active"].isoformat() if "last_active" in r and r["last_active"] else None,
+                "message_count": r.get("count", 0)
+            })
+        return sessions
+
+    def get_full_session_messages(self, session_id: str) -> List[Dict[str, Any]]:
+        """Returns all messages in a session in chronological order."""
+        cursor = self.collection.find({"session_id": session_id}).sort("created_at", 1)
+        messages = []
+        for doc in cursor:
+            messages.append({
+                "user_query": doc.get("user_query", ""),
+                "assistant_response": doc.get("assistant_response", ""),
+                "sector": doc.get("sector", "all"),
+                "sources": doc.get("sources", []),
+                "created_at": doc["created_at"].isoformat() if "created_at" in doc else None
+            })
+        return messages
+
+    def delete_session(self, session_id: str) -> bool:
+        """Deletes all messages for a session."""
+        result = self.collection.delete_many({"session_id": session_id})
+        return result.deleted_count > 0

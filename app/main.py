@@ -88,6 +88,28 @@ def chat_endpoint(request: ChatRequest):
     return ChatResponse(**result)
 
 # -------------------------------------------------------------
+# Sessions Management Endpoints (ChatGPT/Antigravity style)
+# -------------------------------------------------------------
+@app.get("/api/sessions/", tags=["Session Management"])
+def list_sessions_endpoint():
+    """Returns recent chat sessions for the sidebar history."""
+    rag = get_rag_service()
+    return rag.chat_history.list_all_sessions(limit=30)
+
+@app.get("/api/sessions/{session_id}", tags=["Session Management"])
+def get_session_messages_endpoint(session_id: str):
+    """Retrieves all conversation turns for a given session ID."""
+    rag = get_rag_service()
+    return rag.chat_history.get_full_session_messages(session_id)
+
+@app.delete("/api/sessions/{session_id}", tags=["Session Management"])
+def delete_session_endpoint(session_id: str):
+    """Deletes a session and its message history."""
+    rag = get_rag_service()
+    success = rag.chat_history.delete_session(session_id)
+    return {"status": "success" if success else "not_found", "session_id": session_id}
+
+# -------------------------------------------------------------
 # 3. PDF Ingestion Endpoint
 # -------------------------------------------------------------
 @app.post("/api/upload-pdf/", response_model=PDFUploadResponse, tags=["Document Ingestion"])

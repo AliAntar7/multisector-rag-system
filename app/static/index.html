@@ -3,176 +3,306 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>منصة دروسات - نظام المحادثة الذكي (DROSAT RAG)</title>
+  <title>المساعد الذكي لمنصة دروسات - DROSAT RAG</title>
   <link rel="stylesheet" href="/static/style.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
 <body>
-  <div class="app-container">
-    <!-- Header -->
-    <header class="navbar">
-      <div class="brand">
-        <div class="brand-icon">🎓</div>
-        <div>
-          <h1>منصة دروسات التعليمية</h1>
-          <span class="subtitle">Multisector RAG Knowledge Base System</span>
+  <div class="chatgpt-layout">
+    <!-- Right Sidebar / Drawer (ChatGPT / Antigravity Style in Arabic RTL) -->
+    <aside class="sidebar-drawer" id="sidebarDrawer">
+      <!-- Drawer Header with Official Logo (White Background) -->
+      <div class="drawer-header">
+        <div class="drawer-brand">
+          <div class="brand-logo-container">
+            <img src="/static/logo.webp" alt="دروسات DROSAT" class="brand-logo-img">
+          </div>
+          <div class="brand-text-block">
+            <h2>المساعد الذكي لمنصة دروسات</h2>
+            <span class="brand-tag">RAG Knowledge Engine</span>
+          </div>
         </div>
       </div>
-      <div class="header-badges">
-        <div class="status-indicator">
-          <span class="pulse-dot"></span>
-          <span id="apiStatusText">Qdrant & Atlas Connected</span>
+
+      <!-- New Chat Button -->
+      <div class="new-chat-wrapper">
+        <button id="newChatBtn" class="btn-new-chat">
+          <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+          </svg>
+          <span>محادثة جديدة</span>
+        </button>
+      </div>
+
+      <!-- Session History Section -->
+      <div class="history-section">
+        <span class="section-label">المحادثات السابقة (سجل MongoDB)</span>
+        <div class="history-list" id="historyList">
+          <div class="history-loading">جاري تحميل المحادثات...</div>
         </div>
-        <a href="/docs" target="_blank" class="api-doc-link">
-          <span>Swagger API (/docs)</span>
-          <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      </div>
+
+      <!-- PDF Ingestion Modal Trigger Button -->
+      <div class="drawer-action-wrapper">
+        <button id="openUploadModalBtn" class="btn-drawer-action" title="رفع وتضمين مستند PDF في Qdrant">
+          <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/>
+          </svg>
+          <span>تضمين PDF في قاعدة المعرفة</span>
+        </button>
+      </div>
+
+      <!-- Drawer Footer -->
+      <div class="drawer-footer">
+        <div class="system-status">
+          <span class="status-indicator-dot"></span>
+          <span>Qdrant & Atlas متصل</span>
+        </div>
+        <a href="/docs" target="_blank" class="docs-link" title="Open Swagger API documentation">
+          <span>Swagger /docs</span>
+          <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
           </svg>
         </a>
       </div>
-    </header>
+    </aside>
 
-    <!-- Main Workspace -->
-    <main class="main-layout">
-      <!-- Sidebar / Ingestion Panel -->
-      <aside class="sidebar">
-        <!-- PDF Ingestion Card -->
-        <div class="card">
-          <div class="card-header">
-            <h3>📥 رفع وتضمين مستندات جديدة</h3>
-          </div>
-          <p class="card-desc">رفع ملفات PDF إضافية ليتم تقطيعها وفهرستها في Qdrant Cloud تلقائياً.</p>
-
-          <form id="uploadForm" class="upload-form">
-            <div class="form-group">
-              <label for="uploadSector">القطاع المستهدف (Target Sector):</label>
-              <select id="uploadSector" class="select-input">
-                <option value="courses_curriculum">المناهج والكورسات (Courses & Curriculum)</option>
-                <option value="teachers_centers">المدرسين والسناتر (Teachers & Centers)</option>
-                <option value="policies_support">السياسات والدعم الفني (Policies & Support)</option>
-                <option value="general">عام (General Sector)</option>
-              </select>
-            </div>
-
-            <div class="file-dropzone" id="dropzone">
-              <input type="file" id="pdfFileInput" accept=".pdf" class="file-input">
-              <div class="dropzone-content">
-                <div class="upload-icon">📄</div>
-                <span id="fileLabel">اسحب ملف PDF هنا أو اضغط للاختيار</span>
-                <span class="file-hint">يقبل ملفات PDF فقط</span>
-              </div>
-            </div>
-
-            <button type="submit" id="uploadBtn" class="btn btn-primary" disabled>
-              <span>رفع وتضمين في Qdrant</span>
-            </button>
-
-            <!-- Progress & Feedback -->
-            <div id="uploadFeedback" class="feedback-alert hidden"></div>
-          </form>
-        </div>
-
-        <!-- System Stats Card -->
-        <div class="card stats-card">
-          <div class="card-header">
-            <h3>📊 حالة قاعدة المعرفة</h3>
-          </div>
-          <ul class="stats-list">
-            <li>
-              <span>إجمالي العناصر المفهرسة:</span>
-              <strong>1,000+ عنصر</strong>
-            </li>
-            <li>
-              <span>قاعدة المتجهات:</span>
-              <span class="badge badge-qdrant">Qdrant Cloud (384D)</span>
-            </li>
-            <li>
-              <span>سجل المحادثات:</span>
-              <span class="badge badge-mongo">MongoDB Atlas</span>
-            </li>
-            <li>
-              <span>محرك الاستدلال:</span>
-              <span class="badge badge-gemini">Google Gemini Flash</span>
-            </li>
-          </ul>
-        </div>
-      </aside>
-
-      <!-- Main Chat Area -->
-      <section class="chat-section">
-        <!-- Chat Toolbar -->
-        <div class="chat-toolbar">
-          <div class="sector-filters">
-            <span class="filter-label">تصفية البحث حسب القطاع:</span>
-            <div class="filter-pills" id="sectorPills">
-              <button class="pill active" data-sector="all">جميع القطاعات</button>
-              <button class="pill" data-sector="courses_curriculum">المناهج والكورسات</button>
-              <button class="pill" data-sector="teachers_centers">المدرسين والسناتر</button>
-              <button class="pill" data-sector="policies_support">السياسات والدعم الفني</button>
-            </div>
-          </div>
-
-          <div class="session-actions">
-            <span class="session-badge" id="sessionDisplay">جلسة: جارٍ التحميل...</span>
-            <button id="newSessionBtn" class="btn btn-outline" title="بدء محادثة جديدة وتصفير الجلسة">
-              <span>جلسة جديدة 🔄</span>
-            </button>
+    <!-- Main Chat Workspace (Left Side in Arabic RTL) -->
+    <main class="chat-workspace">
+      <!-- Clean Top Navbar -->
+      <header class="chat-topbar">
+        <div class="topbar-right">
+          <button id="toggleSidebarBtn" class="btn-icon" title="تبديل القائمة الجانبية">
+            <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7"/>
+            </svg>
+          </button>
+          <div class="topbar-title-wrapper">
+            <span class="topbar-title">المساعد الذكي لمنصة دروسات</span>
+            <span class="topbar-badge">ذكاء اصطناعي موثق بالصفحة</span>
           </div>
         </div>
+        <div class="topbar-left">
+          <span class="current-session-label" id="sessionDisplay">جلسة: ...</span>
+        </div>
+      </header>
 
-        <!-- Messages Container -->
+      <!-- Messages Stream (Centered ChatGPT Container) -->
+      <div class="messages-viewport" id="messagesViewport">
         <div class="messages-container" id="messagesContainer">
-          <!-- Initial Assistant Welcome Message -->
-          <div class="message-wrapper assistant">
-            <div class="avatar">🤖</div>
-            <div class="message-bubble">
-              <div class="message-text">
-                أهلاً بك في المساعد الذكي الرسمي لمنصة <strong>دروسات التعليمية</strong>! 👋<br>
-                أنا مدعوم بنظام RAG كامل يقرأ من كتالوج المنصة الرسمي مباشرة لتقديم إجابات موثقة عن:
-                <ul>
-                  <li>📚 تفاصيل ومناهج وأسعار الكورسات (تالتة ثانوي، أولى وتانية).</li>
-                  <li>🏫 مواعيد حصص المدرسين في السناتر وأرقام التواصل.</li>
-                  <li>💳 طرق الدفع عبر كاشير وفوري وسياسات التوصيل والدعم الفني.</li>
-                </ul>
-                تقدر تسألني أي سؤال مباشرة، أو تجرب الاقتراحات اللي تحت دي:
-              </div>
-              <div class="quick-prompts">
-                <button class="prompt-chip" data-prompt="تفاصيل كورس الفيزياء لتالتة ثانوي وسعره كام؟" data-sector="courses_curriculum">
-                  🔬 كورس فيزياء 3 ثانوي
-                </button>
-                <button class="prompt-chip" data-prompt="مواعيد وسنتر مستر محمد عبدالمعبود في مدينة نصر؟" data-sector="teachers_centers">
-                  👨‍🏫 مستر محمد عبدالمعبود
-                </button>
-                <button class="prompt-chip" data-prompt="صلاحية كود فوري ومواعيد شحن الملازم للمحافظات؟" data-sector="policies_support">
-                  🚚 شحن الملازم وكود فوري
-                </button>
+          <!-- Initial Welcome Message -->
+          <div class="chat-row assistant">
+            <div class="chat-row-content">
+              <div class="msg-avatar bot-avatar">🤖</div>
+              <div class="msg-body">
+                <div class="msg-author">المساعد الذكي لمنصة دروسات</div>
+                <div class="msg-text">
+                  <p>أهلاً بك يا بطل في المساعد الذكي الرسمي لمنصة <strong>دروسات التعليمية</strong>! 👋</p>
+                  <p>أنا مبرمج بنظام RAG متصل بكتالوج المنصة الرسمي مباشرة لتقديم إجابات موثقة بالصفحة وكود العنصر عن:</p>
+                  <ul>
+                    <li>📚 <strong>المناهج والكورسات:</strong> محتوى الحصص والأسعار والمدرسين (تالتة ثانوي، أولى وتانية).</li>
+                    <li>🏫 <strong>المدرسين والسناتر:</strong> مواعيد الحصص في السناتر وأرقام التواصل والقاعات.</li>
+                    <li>💳 <strong>سياسات الاشتراك والدعم:</strong> الدفع بكاشير وفوري وتوصيل الملازم للمحافظات.</li>
+                  </ul>
+                </div>
+                <div class="quick-prompts-wrapper">
+                  <div class="quick-prompts-label">
+                    <span class="sparkle-icon">✨</span>
+                    <span>اسأل عن:</span>
+                  </div>
+                  <div class="quick-prompts">
+                    <button class="prompt-chip" data-prompt="تفاصيل كورس الفيزياء لتالتة ثانوي وسعره كام ومين المدرس؟" data-sector="courses_curriculum">
+                      🔬 كورس فيزياء تالتة ثانوي
+                    </button>
+                    <button class="prompt-chip" data-prompt="مواعيد وسنتر مستر محمد عبدالمعبود في مدينة نصر ورقم التواصل؟" data-sector="teachers_centers">
+                      👨‍🏫 مواعيد مستر محمد عبدالمعبود
+                    </button>
+                    <button class="prompt-chip" data-prompt="صلاحية كود فوري ومواعيد شحن الملازم للمحافظات؟" data-sector="policies_support">
+                      🚚 شحن الملازم وكود فوري
+                    </button>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
         </div>
+      </div>
 
-        <!-- Chat Input Bar -->
-        <div class="chat-input-area">
-          <form id="chatForm" class="chat-form">
-            <input 
-              type="text" 
+      <!-- Floating Input Area (ChatGPT Style with Sector Dropup Selector) -->
+      <div class="input-dock">
+        <div class="input-dock-container">
+          
+          <!-- Sector Selector & Help Controls (Model Picker Style) -->
+          <div class="dock-controls-row">
+            <!-- Sector Dropdown Trigger -->
+            <div class="sector-dropdown-wrapper" id="sectorDropdownWrapper">
+              <button type="button" class="btn-sector-trigger" id="sectorTriggerBtn" title="تحديد قطاع البحث في المنصة">
+                <span class="sector-trigger-label">القطاع المحدد:</span>
+                <span class="sector-icon" id="activeSectorIcon">🌐</span>
+                <span class="sector-name" id="activeSectorName">جميع القطاعات (بحث عام)</span>
+                <svg class="chevron-icon" width="14" height="14" viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd" d="M14.707 12.707a1 1 0 01-1.414 0L10 9.414l-3.293 3.293a1 1 0 01-1.414-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 010 1.414z" clip-rule="evenodd"/>
+                </svg>
+              </button>
+
+              <!-- Dropup Menu (Pops UP above the input) -->
+              <div class="sector-menu-popover hidden" id="sectorMenu">
+                <div class="menu-header">
+                  <span>تحديد قطاع البحث الدلالي:</span>
+                </div>
+                <div class="menu-items">
+                  <button type="button" class="sector-option active" data-sector="all">
+                    <div class="option-icon">🌐</div>
+                    <div class="option-info">
+                      <span class="option-title">جميع القطاعات (بحث عام)</span>
+                      <span class="option-desc">بحث شامل عبر جميع الكتالوجات (1000 عنصر)</span>
+                    </div>
+                    <span class="option-check">✓</span>
+                  </button>
+
+                  <button type="button" class="sector-option" data-sector="courses_curriculum">
+                    <div class="option-icon">📚</div>
+                    <div class="option-info">
+                      <span class="option-title">المناهج والكورسات</span>
+                      <span class="option-desc">أسعار الحصص، الملازم، ومناهج الثانوية العامة</span>
+                    </div>
+                    <span class="option-check">✓</span>
+                  </button>
+
+                  <button type="button" class="sector-option" data-sector="teachers_centers">
+                    <div class="option-icon">🏫</div>
+                    <div class="option-info">
+                      <span class="option-title">المدرسين والسناتر والمواعيد</span>
+                      <span class="option-desc">مواعيد القاعات، أماكن السناتر، وأرقام المدرسين</span>
+                    </div>
+                    <span class="option-check">✓</span>
+                  </button>
+
+                  <button type="button" class="sector-option" data-sector="policies_support">
+                    <div class="option-icon">💳</div>
+                    <div class="option-info">
+                      <span class="option-title">السياسات والدعم الفني</span>
+                      <span class="option-desc">الدفع بكاشير وفوري، الاسترداد، وشحن بوستا</span>
+                    </div>
+                    <span class="option-check">✓</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Help Button (?) & Explanation Popover -->
+            <div class="sector-help-wrapper" id="sectorHelpWrapper">
+              <button type="button" class="btn-help-trigger" id="sectorHelpBtn" title="ماذا يحدث عند تغيير القطاع؟">
+                <span>؟</span>
+              </button>
+
+              <!-- Help Popover -->
+              <div class="help-popover hidden" id="helpPopover">
+                <div class="help-popover-header">
+                  <div class="help-title-block">
+                    <span class="help-icon">💡</span>
+                    <h4>ماذا يحدث عند تغيير القطاع المستهدف؟</h4>
+                  </div>
+                  <button type="button" class="btn-close-popover" id="closeHelpPopoverBtn">&times;</button>
+                </div>
+                <div class="help-popover-body">
+                  <p>عند تحديد قطاع معين، يقوم محرك الـ RAG بتطبيق <strong>تصفية متجهات دقيقة (Strict Qdrant Filter)</strong>:</p>
+                  <ul>
+                    <li><strong>دقة فائقة (High Precision):</strong> يتم استرجاع الإجابات من عناصر ذلك القطاع فقط، مما يمنع اختلاط مواعيد السناتر مع أسعار المناهج أو سياسات الدفع.</li>
+                    <li><strong>تطابق أعلى:</strong> تركيز البحث الدلالي في النطاق المطلوب فقط للحصول على إجابة دقيقة وموثقة.</li>
+                    <li><strong>جميع القطاعات (الافتراضي):</strong> يبحث شمولياً في كامل الـ 1000 عنصر، وهو مناسب للأسئلة المفتوحة أو الشاملة.</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Chat Input Form -->
+          <form id="chatForm" class="chat-input-form">
+            <textarea 
               id="queryInput" 
-              class="chat-input" 
+              class="chat-textarea" 
               placeholder="اسأل أي سؤال عن منصة دروسات، المناهج، المدرسين، أو كاشير وفوري..." 
-              autocomplete="off"
-            >
-            <button type="submit" id="sendBtn" class="btn btn-send">
-              <span>إرسال</span>
-              <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
+              rows="1"
+            ></textarea>
+            <button type="submit" id="sendBtn" class="btn-submit-send" title="إرسال">
+              <!-- Paper plane icon pointing LEFT (←) directly in SVG coordinates -->
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" class="send-plane-icon">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 12L21 3 1 12l20 9-2-9zm0 0h-8"/>
               </svg>
             </button>
           </form>
+          <div class="input-hint">
+            <span>الردود مسترجعة بالبحث الدلالي من <strong>Qdrant Cloud</strong> وموثقة من كتالوج دروسات الرسمي 2026.</span>
+          </div>
         </div>
-      </section>
+      </div>
     </main>
+  </div>
+
+  <!-- PDF Ingestion Modal Dialog (Popup) -->
+  <div id="uploadModal" class="modal-backdrop hidden">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <div class="modal-title">
+          <div class="modal-icon-badge">📁</div>
+          <div>
+            <h3>تضمين وفهرسة مستند PDF في قاعدة المعرفة</h3>
+            <span class="modal-subtitle">Dynamic Knowledge Ingestion into Qdrant Cloud</span>
+          </div>
+        </div>
+        <button id="closeUploadModalBtn" class="btn-close-modal" title="إغلاق">&times;</button>
+      </div>
+
+      <div class="modal-body">
+        <!-- Feature Explanation Card inside popup -->
+        <div class="feature-info-card">
+          <div class="info-badge">💡 ما هي هذه الميزة ومتى تُستخدم؟</div>
+          <p>
+            تتيح لك هذه الميزة تحديث وتوسيع قاعدة بيانات الذكاء الاصطناعي لمنصة <strong>دروسات</strong> بشكل فوري ومباشر دون تعديل الكود:
+          </p>
+          <ul>
+            <li><strong>ماذا تفعل؟</strong> عند رفع ملف PDF (مثل جداول حصص سناتر جديدة، أو تحديث أسعار الكورسات، أو سياسات شحن الملازم)، يحلل النظام المستند ويولد تضمينات رياضية (Embeddings 384D) ويفهرسها في <strong>Qdrant Cloud</strong> فوراً.</li>
+            <li><strong>متى تُستخدم؟</strong> عند إصدار أي محتوى تعليمي أو تنظيمي جديد للمنصة ليكون متاحاً للرد على الطلاب بالصفحة والكود في نفس اللحظة.</li>
+          </ul>
+        </div>
+
+        <form id="uploadForm" class="modal-upload-form">
+          <div class="form-group">
+            <label for="uploadSector" class="form-label">القطاع المستهدف في المنصة:</label>
+            <select id="uploadSector" class="form-select">
+              <option value="courses_curriculum">المناهج والكورسات (المواد والمدرسين والأسعار)</option>
+              <option value="teachers_centers">المدرسين والسناتر والمواعيد (القاعات والاتصال)</option>
+              <option value="policies_support">السياسات والدعم الفني وكاشير وفوري</option>
+              <option value="general">عام / شامل</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">اختر ملف الكتالوج أو المستند (PDF):</label>
+            <div class="modal-dropzone" id="dropzone">
+              <input type="file" id="pdfFileInput" accept=".pdf" class="modal-file-input">
+              <div class="dropzone-content">
+                <span class="dropzone-icon">📥</span>
+                <span id="fileLabel" class="dropzone-label">اسحب ملف PDF هنا أو اضغط للتصفح</span>
+                <span class="dropzone-hint">يدعم الملفات النصية بصيغة PDF حتى 50 ميجابايت</span>
+              </div>
+            </div>
+          </div>
+
+          <div id="uploadFeedback" class="feedback-badge hidden"></div>
+
+          <div class="modal-footer">
+            <button type="button" id="cancelUploadBtn" class="btn-cancel">إلغاء</button>
+            <button type="submit" id="uploadBtn" class="btn-modal-submit" disabled>
+              <span>فهرسة وتضمين في Qdrant ⚡</span>
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
   </div>
 
   <script src="/static/app.js"></script>
